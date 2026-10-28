@@ -3,49 +3,51 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Latihan Soal Online - Food Safety & Sanitasi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Latihan Food Safety & Sanitasi</title>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
+  margin: 0;
+  padding: 16px;
   background: #f4f7f6;
   color: #333;
+  font-family: Arial, Helvetica, sans-serif;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
   min-height: 100vh;
-  padding: 20px;
 }
 
 .quiz-container {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,.1);
   width: 100%;
   max-width: 720px;
-  padding: 30px;
-  margin: 20px 0;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px #00000012;
+  padding: 24px;
+  margin: 12px 0;
 }
 
-h2 {
+h1 {
+  font-size: 1.6rem;
   text-align: center;
-  margin-bottom: 20px;
   color: #2c3e50;
+  margin: 8px 0 24px;
 }
 
 .progress-bar {
-  font-size: .9rem;
+  font-size: .92rem;
   color: #666;
-  margin-bottom: 10px;
   text-align: right;
   font-weight: bold;
+  margin-bottom: 10px;
 }
 
 .progress-track {
@@ -53,7 +55,7 @@ h2 {
   background: #e9ecef;
   border-radius: 99px;
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 
 .progress-fill {
@@ -63,39 +65,17 @@ h2 {
 }
 
 .question {
-  font-size: 1.15rem;
-  margin-bottom: 15px;
+  font-size: 1.12rem;
   font-weight: 600;
-  line-height: 1.7;
+  line-height: 1.8;
+  margin-bottom: 18px;
   overflow-wrap: anywhere;
-}
-
-.q-image {
-  width: 100%;
-  max-height: 360px;
-  object-fit: contain;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  display: block;
-}
-
-.opt-image {
-  max-width: 200px;
-  max-height: 150px;
-  object-fit: contain;
-  border-radius: 6px;
-  margin: 8px 0;
-  display: block;
-}
-
-audio {
-  width: 100%;
-  margin: 8px 0;
-  display: block;
 }
 
 .options-list {
   list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .option-item {
@@ -104,47 +84,40 @@ audio {
 
 .option-btn {
   width: 100%;
-  padding: 15px;
-  font-size: 1rem;
+  padding: 14px;
   text-align: left;
+  font-size: 1rem;
+  line-height: 1.6;
   background: #f8f9fa;
   border: 2px solid #e9ecef;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: all .2s;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
+  color: #333;
 }
 
 .option-btn:hover {
-  background: #e2e6ea;
+  background: #eef3f8;
 }
 
 .option-btn.selected {
   background: #e7f1ff;
   border-color: #0d6efd;
   color: #0d6efd;
-  font-weight: 600;
-}
-
-.option-btn:focus-visible,
-.action-btn:focus-visible {
-  outline: 3px solid #ffc107;
-  outline-offset: 2px;
+  font-weight: bold;
 }
 
 .navigation {
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  margin-top: 30px;
+  margin-top: 26px;
 }
 
 .action-btn {
-  padding: 12px 22px;
+  padding: 12px 18px;
   font-size: 1rem;
-  border: none;
-  border-radius: 6px;
+  border: 0;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
 }
@@ -154,17 +127,16 @@ audio {
   color: white;
 }
 
-.btn-next:hover {
-  background: #0b5ed7;
-}
-
 .btn-submit {
   background: #198754;
   color: white;
 }
 
-.btn-submit:hover {
-  background: #157347;
+.save-status {
+  text-align: center;
+  color: #198754;
+  font-size: .9rem;
+  margin: 20px 0 0;
 }
 
 .result-screen {
@@ -175,12 +147,12 @@ audio {
   font-size: 3rem;
   font-weight: bold;
   color: #198754;
-  margin: 15px 0;
+  margin: 12px 0;
 }
 
 .review-section {
   text-align: left;
-  margin-top: 30px;
+  margin-top: 28px;
   border-top: 2px dashed #ddd;
   padding-top: 20px;
 }
@@ -188,9 +160,10 @@ audio {
 .review-item {
   background: #f8f9fa;
   border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 15px;
+  padding: 14px;
+  margin: 12px 0;
   border-left: 5px solid #ccc;
+  line-height: 1.6;
   overflow-wrap: anywhere;
 }
 
@@ -205,15 +178,8 @@ audio {
 }
 
 .review-q {
-  font-weight: 600;
+  font-weight: bold;
   margin-bottom: 8px;
-  line-height: 1.6;
-}
-
-.review-ans {
-  font-size: .95rem;
-  margin-bottom: 6px;
-  line-height: 1.5;
 }
 
 .text-success {
@@ -226,19 +192,33 @@ audio {
   font-weight: bold;
 }
 
-.review-media {
-  max-width: 100%;
-  margin-top: 8px;
+/* SweetAlert2 responsif untuk HP */
+.swal-mobile-popup {
+  width: min(90%, 420px) !important;
+  border-radius: 20px !important;
+  padding: 1.5rem !important;
 }
 
-.save-status {
-  font-size: .85rem;
-  text-align: center;
-  color: #198754;
-  margin-top: 15px;
+.swal-mobile-popup .swal2-title {
+  font-size: 1.4rem;
 }
 
-@media(max-width:480px) {
+.swal-mobile-popup .swal2-html-container {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.swal2-styled {
+  border-radius: 8px !important;
+  padding: 10px 24px !important;
+}
+
+button:focus-visible {
+  outline: 3px solid #ffc107;
+  outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
   body {
     padding: 8px;
   }
@@ -248,8 +228,12 @@ audio {
     margin: 8px 0;
   }
 
+  h1 {
+    font-size: 1.35rem;
+  }
+
   .question {
-    font-size: 1.05rem;
+    font-size: 1.03rem;
   }
 
   .option-btn {
@@ -266,349 +250,209 @@ audio {
 </head>
 
 <body>
-<main class="quiz-container" id="quiz-box" aria-live="polite"></main>
+<main class="quiz-container" id="quiz-box"></main>
 
 <script>
 "use strict";
 
-/*
-  KUNCI PENYIMPANAN
-  Jawaban disimpan di browser menggunakan localStorage.
-*/
+/* ===================================
+   PENGATURAN PENYIMPANAN
+=================================== */
+
 const STORAGE_KEY = "ssw_food_safety_quiz_v1";
 
 /*
-  DATA SOAL
-  correct menggunakan indeks pilihan:
+  correct:
   0 = pilihan A
   1 = pilihan B
   2 = pilihan C
+
+  Periksa kembali kunci jawaban dengan
+  buku resmi OTAFF yang Anda gunakan.
 */
+
 const quizData = [
-  {
-    question: "料理(りょうり)の中(なか)に卵(たまご)の殻(から)や金属片(きんぞくへん)が入(はい)ってしまったものを、まとめて何(なん)と言(い)いますか。",
-    options: [
-      { text: "A. 食品(しょくひん)" },
-      { text: "B. 異物(いぶつ)" },
-      { text: "C. 原材料(げんざいりょう)" }
-    ],
-    correct: 1
-  },
-  {
-    question: "異物(いぶつ)のなかで、金属片(きんぞくへん)やガラス片(へん)、石(いし)のように硬(かた)いものを何(なん)と言(い)いますか。",
-    options: [
-      { text: "A. 硬質異物(こうしついぶつ)" },
-      { text: "B. 軟質異物(なんしついぶつ)" },
-      { text: "C. 生物的異物(せいぶつてきいぶつ)" }
-    ],
-    correct: 0
-  },
-  {
-    question: "歯(は)が欠(か)ける、口(くち)の中(なか)に傷(きず)ができるなど、人(ひと)がケガをするおそれがある原因(げんいん)を何(なん)と言(い)いますか。",
-    options: [
-      { text: "A. 化学的危害要因(かがくてききがいよういん)" },
-      { text: "B. 生物的危害要因(せいぶつてききがいよういん)" },
-      { text: "C. 物理的危害要因(ぶつりてききがいよういん)" }
-    ],
-    correct: 2
-  },
-  {
-    question: "虫(むし)や髪(かみ)の毛(け)、紙片(しへん)などの硬(かた)くない異物(いぶつ)は、次(つぎ)のうちどれに該当(がいとう)しますか。",
-    options: [
-      { text: "A. 物理的危害要因(ぶつりてききがいよういん)である" },
-      { text: "B. 物理的危害要因(ぶつりてききがいよういん)ではないが、苦情(くじょう)の原因(げんいん)になる" },
-      { text: "C. 特定原材料(とくていげんざいりょう)である" }
-    ],
-    correct: 1
-  },
-  {
-    question: "異物(いぶつ)を発見(はっけん)したとき、最初(さいしょ)にとるべき行動(こうどう)として正(ただ)しいものはどれですか。",
-    options: [
-      { text: "A. そのまま作業(さぎょう)を続(つづ)け、あとで報告(ほうこく)する" },
-      { text: "B. すぐに作業(さぎょう)を止(と)めて、責任者(せきにんしゃ)に報告(ほうこく)する" },
-      { text: "C. 自分(じぶん)でゴミ箱(ばこ)に捨(す)てて、誰(だれ)にも言(い)わない" }
-    ],
-    correct: 1
-  },
-  {
-    question: "どんな食品(しょくひん)を作(つく)るときも、どこの作業場(さぎょうじょう)でも共通(きょうつう)しておこなわれている基本的(きほんてき)な衛生管理(えいせいかんり)を何(なん)と言(い)いますか。",
-    options: [
-      { text: "A. HACCPプラン" },
-      { text: "B. 一般衛生管理(いっぱんえいせいかんり)" },
-      { text: "C. 重要管理点(じゅうようかんりてん)（CCP）" }
-    ],
-    correct: 1
-  },
-  {
-    question: "食品製造(しょくひんせいぞう)の「衛生管理(えいせいかんり)」の本来(ほんらい)の目的(もくてき)は何(なん)ですか。",
-    options: [
-      { text: "A. 食品(しょくひん)を食(た)べて、人(ひと)が病気(びょうき)にならないこと、ケガをしないこと" },
-      { text: "B. 工場の機械(きかい)を新(あたら)しくすること" },
-      { text: "C. 会社の売上(うりあげ)を2倍(ばい)にすること" }
-    ],
-    correct: 0
-  },
-  {
-    question: "「一般衛生管理(いっぱんえいせいかんり)」に加(くわ)えて、特に重要(じゅうよう)な工程(こうてい)を決(き)めて衛生管理(えいせいかんり)をおこなう手法(しゅほう)を何(なん)と言(い)いますか。",
-    options: [
-      { text: "A. 5S活動(かつどう)" },
-      { text: "B. HACCPによる衛生管理(えいせいかんり)" },
-      { text: "C. 労働安全管理(ろうどうあんぜんかんり)" }
-    ],
-    correct: 1
-  },
-  {
-    question: "HACCPの重要管理点(じゅうようかんりてん)（CCP）の説明(せつめい)として正(ただ)しいものはどれですか。",
-    options: [
-      { text: "A. 誰(だれ)が作業(さぎょう)してもよい簡単(かんたん)な工程(こうてい)" },
-      { text: "B. 製造工程(せいぞうこうてい)の中で、特に重要(じゅうよう)な工程(こうてい)" },
-      { text: "C. 工場の外(そと)を掃除(そうじ)する工程(こうてい)" }
-    ],
-    correct: 1
-  },
-  {
-    question: "不安全(ふあんぜん)な食品(しょくひん)を出(だ)してしまい、会社の「何(なに)」をなくすことが一番(いちばん)の大きな問題(もんだい)ですか。",
-    options: [
-      { text: "A. 体重(たいじゅう)" },
-      { text: "B. 信用(しんよう)" },
-      { text: "C. 道具(どうぐ)" }
-    ],
-    correct: 1
-  },
-  {
-    question: "通常(つうじょう)の細菌(さいきん)は熱(ねつ)で死(し)にますが、熱(ねつ)や乾燥(かんそう)に強い「殻(から)を被(かぶ)った種(たね)のような状態(じょうたい)」を何(なん)と言(い)いますか。",
-    options: [
-      { text: "A. 毒素(どくそ)" },
-      { text: "B. 芽胞(がほう)" },
-      { text: "C. ウイルス" }
-    ],
-    correct: 1
-  },
-  {
-    question: "主(おも)に鶏肉(とりにく)や食肉(しょくにく)が原因(げんいん)となり、下痢(げり)、腹痛(ふくつう)、発熱(はつねつ)を引き起こす細菌(さいきん)の名前(なまえ)は何(なん)ですか。",
-    options: [
-      { text: "A. カンピロバクター属菌(ぞくきん)" },
-      { text: "B. 腸炎(ちょうえん)ビブリオ" },
-      { text: "C. ボツリヌス菌(きん)" }
-    ],
-    correct: 0
-  },
-  {
-    question: "魚介類(ぎょかいるい)が主な原因(げんいん)となり、激(はげ)しい下痢(げり)を引き起こす細菌(さいきん)の名前(なまえ)は何(なん)ですか。",
-    options: [
-      { text: "A. サルモネラ属菌(ぞくきん)" },
-      { text: "B. 腸炎(ちょうえん)ビブリオ" },
-      { text: "C. セレウス菌(きん)" }
-    ],
-    correct: 1
-  },
-  {
-    question: "O157やO111などの名前(なまえ)で知(し)られ、激(はげ)しい下痢(げり)や「血便(けつべん)」を引き起こす細菌(さいきん)は何(なん)ですか。",
-    options: [
-      { text: "A. 腸管出血性大腸菌(ちょうかんしゅっけつせいだいちょうきん)" },
-      { text: "B. 黄色(おうしょく)ブドウ球菌(きゅうきん)" },
-      { text: "C. ウェルシュ菌(きん)" }
-    ],
-    correct: 0
-  },
-  {
-    question: "人(ひと)の皮膚(ひふ)や「傷口(きずぐち)」に存在(そんざい)し、おにぎりやサンドイッチなどを汚染(おせん)して熱(ねつ)に強い毒素(どくそ)を作る細菌(さいきん)は何(なん)ですか。",
-    options: [
-      { text: "A. セレウス菌(きん)" },
-      { text: "B. ボツリヌス菌(きん)" },
-      { text: "C. 黄色(おうしょく)ブドウ球菌(きゅうきん)" }
-    ],
-    correct: 2
-  },
-  {
-    question: "カレーやシチューなど、加熱調理(かねつちょうり)されたあとにゆっくり温度(おんど)が下(さ)がる間に増(ふ)える、芽胞(がほう)を作る細菌(さいきん)は何(なん)ですか。",
-    options: [
-      { text: "A. カンピロバクター属菌(ぞくきん)" },
-      { text: "B. ウェルシュ菌(きん)" },
-      { text: "C. 腸炎(ちょうえん)ビブリオ" }
-    ],
-    correct: 1
-  },
-  {
-    question: "瓶(びん)詰め食品(しょくひん)やレトルト食品(しょくひん)などで増(ふ)え、呼吸困難(こきゅうこんなん)などの重篤(じゅうとく)な症状(しょうじょう)を起こす芽胞菌(がほうきん)は何(なん)ですか。",
-    options: [
-      { text: "A. ボツリヌス菌(きん)" },
-      { text: "B. サルモネラ属菌(ぞくきん)" },
-      { text: "C. 腸管出血性大腸菌(ちょうかんしゅっけつせいだいちょうきん)" }
-    ],
-    correct: 0
-  },
-  {
-    question: "一般的(いっぱんてき)な食中毒菌(しょくちゅうどくきん)を加熱殺菌(かねつさっきん)するための基本条件(きほんじょうけん)はどれですか。",
-    options: [
-      { text: "A. 60℃で10秒間(びょうかん)以上(いじょう)" },
-      { text: "B. 75℃で1分間(いっぷんかん)以上(いじょう)" },
-      { text: "C. 100℃で5分間(ごふんかん)以上(いじょう)" }
-    ],
-    correct: 1
-  },
-  {
-    question: "カキなどの二枚貝(にまいがい)に汚染(おせん)されていることがあり、人(ひと)の体内(たいない)（腸(ちょう)）でのみ増殖(ぞうしょく)するウイルスは何(なん)ですか。",
-    options: [
-      { text: "A. セレウス菌(きん)" },
-      { text: "B. ノロウイルス" },
-      { text: "C. アニサキス" }
-    ],
-    correct: 1
-  },
-  {
-    question: "ノロウイルスを加熱(かねつ)でやっつけるために必要(ひつよう)な食品(しょくひん)の中心温度(ちゅうしんおんど)と時間(じかん)はどれですか。",
-    options: [
-      { text: "A. 75℃で1分間(いっぷんかん)以上(いじょう)" },
-      { text: "B. 85℃〜90℃で90秒間(びょうかん)以上(いじょう)" },
-      { text: "C. 60℃で20分間(ぷんかん)以上(いじょう)" }
-    ],
-    correct: 1
-  },
-  {
-    question: "ノロウイルスについて正(ただ)しい説明(せつめい)はどれですか。",
-    options: [
-      { text: "A. アルコール消毒(しょうどく)では死(し)なない" },
-      { text: "B. 食品(しょくひん)の中でどんどん増(ふ)える" },
-      { text: "C. 75℃で1分間(いっぷんかん)加熱(かねつ)すれば完全に安全(あんぜん)である" }
-    ],
-    correct: 0
-  },
-  {
-    question: "ノロウイルスによる食中毒(しょくちゅうどく)を予防(よぼう)するための「4原則(げんそく)」に含(ふく)まれないものはどれですか。",
-    options: [
-      { text: "A. 持ち込まない(もちこまない)" },
-      { text: "B. 増やさない(ふやさない)" },
-      { text: "C. 拡げない(ひろげない)" }
-    ],
-    correct: 1
-  },
-  {
-    question: "サバ、イワシ、サケ、イカなどの魚介類(ぎょかいるい)に寄生(きせい)し、生(なま)のまま食べると激(はげ)しい腹痛(ふくつう)を起こす寄生虫(きせいちゅう)は何(なん)ですか。",
-    options: [
-      { text: "A. ソラニン" },
-      { text: "B. ヒスタミン" },
-      { text: "C. アニサキス" }
-    ],
-    correct: 2
-  },
-  {
-    question: "アニサキスを冷凍(れいとう)でやっつけるための正しい条件(じょうけん)はどれですか。",
-    options: [
-      { text: "A. 0℃で1時間(じかん)" },
-      { text: "B. 4℃で1週間(しゅうかん)" },
-      { text: "C. −20℃で24時間(じかん)以上(いじょう)" }
-    ],
-    correct: 2
-  },
-  {
-    question: "じゃがいもの芽(め)や緑色(みどりいろ)の皮(かわ)に含(ふく)まれている、食中毒(しょくちゅうどく)の原因(げんいん)となる化学物質(かがくぶっしつ)は何(なん)ですか。",
-    options: [
-      { text: "A. ヒスタミン" },
-      { text: "B. ソラニン" },
-      { text: "C. アレルゲン" }
-    ],
-    correct: 1
-  },
-  {
-    question: "保存状態(ほぞんじょうたい)の悪いマグロやサバなどの「赤身魚(あかみざかな)」で増(ふ)え、アレルギーに似(に)た症状(しょうじょう)を起こす物質(ぶっしつ)は何(なん)ですか。",
-    options: [
-      { text: "A. ヒスタミン" },
-      { text: "B. ソラニン" },
-      { text: "C. 芽胞(がほう)" }
-    ],
-    correct: 0
-  },
-  {
-    question: "日本の法律(ほうりつ)で、加工食品(かこうしょくひん)に表示(ひょうじ)する「義務(ぎむ)」があるアレルギー物質(ぶっしつ)（特定原材料(とくていげんざいりょう)）の数はいくつか。",
-    options: [
-      { text: "A. 7品目(ひんもく)" },
-      { text: "B. 9品目(ひんもく)" },
-      { text: "C. 20品目(ひんもく)" }
-    ],
-    correct: 1
-  },
-  {
-    question: "アレルギー物質(ぶっしつ)を含む原材料(げんざいりょう)の調理(ちょうり)に使(つか)った機械(きかい)や器具(きぐ)の取り扱い(とりあつかい)として、正しいものはどれですか。",
-    options: [
-      { text: "A. そのまま次の別の原材料(げんざいりょう)の調理に使ってよい" },
-      { text: "B. 次の調理に使う前に、必ず洗浄(せんじょう)・殺菌(さっきん)しなければならない" },
-      { text: "C. タオルで拭くだけで洗わなくてよい" }
-    ],
-    correct: 1
-  },
-  {
-    question: "5S活動(かつどう)の中で、「使(つか)わないものをなくして、使うものだけにすること」を何(なん)と言(い)いますか。",
-    options: [
-      { text: "A. 整理(せいり)" },
-      { text: "B. 整頓(せいとん)" },
-      { text: "C. 清掃(せいそう)" }
-    ],
-    correct: 0
-  },
-  {
-    question: "5S活動(かつどう)の中で、「器具(きぐ)や道具(どうぐ)を、必要(ひつよう)なときにすぐに取り出せる(とりだせる)ようにすること」を何(なん)と言(い)いますか。",
-    options: [
-      { text: "A. 清掃(せいそう)" },
-      { text: "B. 整頓(せいとん)" },
-      { text: "C. 清潔(せいけつ)" }
-    ],
-    correct: 1
-  },
-  {
-    question: "加熱(かねつ)や薬剤(やくざい)による殺菌(さっきん)が終わった食品(しょくひん)を取り扱う(とりあつかう)区域(くいき)はどこですか。",
-    options: [
-      { text: "A. 汚染作業区域(おせんさぎょうくいき)" },
-      { text: "B. 準清潔作業区域(じゅんせいけつさぎょうくいき)" },
-      { text: "C. 清潔作業区域(せいけつさぎょうくいき)" }
-    ],
-    correct: 2
-  },
-  {
-    question: "作業服(さぎょうふく)を正(ただ)しく着用(ちゃくよう)するとき、間違(まちが)っている方法はどれですか。",
-    options: [
-      { text: "A. マスクから鼻(はな)が出ないようにする" },
-      { text: "B. 帽子(ぼうし)から髪(かみ)の毛(け)が出ないように深くかぶる" },
-      { text: "C. 作業場(さぎょうじょう)が暑(あつ)いときは、袖(そで)をまくって作業する" }
-    ],
-    correct: 2
-  },
-  {
-    question: "細菌(さいきん)が増(ふ)えるために必要(ひつよう)な「3つの要素(ようそ)」は何(なん)ですか。",
-    options: [
-      { text: "A. 温度(おんど)、水分(すいぶん)、栄養(えいよう)" },
-      { text: "B. 塩分(えんぶん)、糖分(とうぶん)、油分(ゆぶん)" },
-      { text: "C. 空気(くうき)、日光(にっこう)、土(つち)" }
-    ],
-    correct: 0
-  },
-  {
-    question: "正(ただ)しい手洗い(てあらい)の方法(ほうほう)で、せっけんをつけてよく洗(あら)う時間(じかん)の目安(めやす)はどのくらいですか。",
-    options: [
-      { text: "A. 5秒間(びょうかん)程度(ていど)" },
-      { text: "B. 30秒間(びょうかん)程度(ていど)" },
-      { text: "C. 5分間(ふんかん)程度(ていど)" }
-    ],
-    correct: 1
-  },
-  {
-    question: "手(て)を洗(あら)ったあと、アルコールで消毒(しょうどく)する前の工程(こうてい)として正しいものはどれですか。",
-    options: [
-      { text: "A. すぐにアルコールを吹き付ける" },
-      { text: "B. 使い捨てのペーパータオルまたはエアータオルで、手を乾かす(かわかす)" },
-      { text: "C. 作業服(さぎょうふく)で手を拭(ふ)いてからアルコールをつける" }
-    ],
-    correct: 1
-  }
+{
+question:"料理(りょうり)の中(なか)に卵(たまご)の殻(から)や金属片(きんぞくへん)が入(はい)ってしまったものを、まとめて何(なん)と言(い)いますか。",
+options:["A. 食品(しょくひん)","B. 異物(いぶつ)","C. 原材料(げんざいりょう)"],
+correct:1
+},
+{
+question:"異物(いぶつ)のなかで、金属片(きんぞくへん)やガラス片(へん)、石(いし)のように硬(かた)いものを何(なん)と言(い)いますか。",
+options:["A. 硬質異物(こうしついぶつ)","B. 軟質異物(なんしついぶつ)","C. 生物的異物(せいぶつてきいぶつ)"],
+correct:0
+},
+{
+question:"歯(は)が欠(か)ける、口(くち)の中(なか)に傷(きず)ができるなど、人(ひと)がケガをするおそれがある原因(げんいん)を何(なん)と言(い)いますか。",
+options:["A. 化学的危害要因(かがくてききがいよういん)","B. 生物的危害要因(せいぶつてききがいよういん)","C. 物理的危害要因(ぶつりてききがいよういん)"],
+correct:2
+},
+{
+question:"虫(むし)や髪(かみ)の毛(け)、紙片(しへん)などの硬(かた)くない異物(いぶつ)は、次(つぎ)のうちどれに該当(がいとう)しますか。",
+options:["A. 物理的危害要因(ぶつりてききがいよういん)である","B. 物理的危害要因(ぶつりてききがいよういん)ではないが、苦情(くじょう)の原因(げんいん)になる","C. 特定原材料(とくていげんざいりょう)である"],
+correct:1
+},
+{
+question:"異物(いぶつ)を発見(はっけん)したとき、最初(さいしょ)にとるべき行動(こうどう)として正(ただ)しいものはどれですか。",
+options:["A. そのまま作業(さぎょう)を続(つづ)け、あとで報告(ほうこく)する","B. すぐに作業(さぎょう)を止(と)めて、責任者(せきにんしゃ)に報告(ほうこく)する","C. 自分(じぶん)でゴミ箱(ばこ)に捨(す)てて、誰(だれ)にも言(い)わない"],
+correct:1
+},
+{
+question:"どんな食品(しょくひん)を作(つく)るときも、共通(きょうつう)しておこなう基本的(きほんてき)な衛生管理(えいせいかんり)を何(なん)と言(い)いますか。",
+options:["A. HACCPプラン","B. 一般衛生管理(いっぱんえいせいかんり)","C. 重要管理点(じゅうようかんりてん)（CCP）"],
+correct:1
+},
+{
+question:"食品製造(しょくひんせいぞう)における衛生管理(えいせいかんり)の目的(もくてき)は何(なん)ですか。",
+options:["A. 食品(しょくひん)を食(た)べた人(ひと)が病気(びょうき)やケガをしないようにする","B. 工場の機械(きかい)を新(あたら)しくする","C. 会社の売上(うりあげ)を2倍(ばい)にする"],
+correct:0
+},
+{
+question:"一般衛生管理(いっぱんえいせいかんり)に加(くわ)えて、特に重要(じゅうよう)な工程(こうてい)を決(き)めて管理(かんり)する手法(しゅほう)は何(なん)ですか。",
+options:["A. 5S活動(かつどう)","B. HACCPによる衛生管理(えいせいかんり)","C. 労働安全管理(ろうどうあんぜんかんり)"],
+correct:1
+},
+{
+question:"HACCPの重要管理点(じゅうようかんりてん)（CCP）の説明(せつめい)として正(ただ)しいものはどれですか。",
+options:["A. 誰(だれ)が作業(さぎょう)してもよい簡単(かんたん)な工程(こうてい)","B. 製造工程(せいぞうこうてい)の中で特に重要(じゅうよう)な工程(こうてい)","C. 工場の外(そと)を掃除(そうじ)する工程(こうてい)"],
+correct:1
+},
+{
+question:"不安全(ふあんぜん)な食品(しょくひん)を出(だ)したとき、会社が失(うしな)うおそれのある大切(たいせつ)なものは何(なん)ですか。",
+options:["A. 体重(たいじゅう)","B. 信用(しんよう)","C. 道具(どうぐ)"],
+correct:1
+},
+{
+question:"熱(ねつ)や乾燥(かんそう)に強(つよ)い、細菌(さいきん)の殻(から)のような状態(じょうたい)を何(なん)と言(い)いますか。",
+options:["A. 毒素(どくそ)","B. 芽胞(がほう)","C. ウイルス"],
+correct:1
+},
+{
+question:"主(おも)に鶏肉(とりにく)などが原因(げんいん)となり、下痢(げり)、腹痛(ふくつう)、発熱(はつねつ)を引き起こす細菌(さいきん)は何(なん)ですか。",
+options:["A. カンピロバクター属菌(ぞくきん)","B. 腸炎(ちょうえん)ビブリオ","C. ボツリヌス菌(きん)"],
+correct:0
+},
+{
+question:"魚介類(ぎょかいるい)が主(おも)な原因(げんいん)となり、食中毒(しょくちゅうどく)を引き起こす細菌(さいきん)はどれですか。",
+options:["A. サルモネラ属菌(ぞくきん)","B. 腸炎(ちょうえん)ビブリオ","C. セレウス菌(きん)"],
+correct:1
+},
+{
+question:"O157やO111などの名前(なまえ)で知られ、血便(けつべん)などを引き起こす細菌(さいきん)は何(なん)ですか。",
+options:["A. 腸管出血性大腸菌(ちょうかんしゅっけつせいだいちょうきん)","B. 黄色(おうしょく)ブドウ球菌(きゅうきん)","C. ウェルシュ菌(きん)"],
+correct:0
+},
+{
+question:"人(ひと)の皮膚(ひふ)や傷口(きずぐち)に存在(そんざい)し、おにぎりなどを汚染(おせん)することがある細菌(さいきん)は何(なん)ですか。",
+options:["A. セレウス菌(きん)","B. ボツリヌス菌(きん)","C. 黄色(おうしょく)ブドウ球菌(きゅうきん)"],
+correct:2
+},
+{
+question:"カレーやシチューなどをゆっくり冷(ひ)ます間(あいだ)に増(ふ)えることがある細菌(さいきん)は何(なん)ですか。",
+options:["A. カンピロバクター属菌(ぞくきん)","B. ウェルシュ菌(きん)","C. 腸炎(ちょうえん)ビブリオ"],
+correct:1
+},
+{
+question:"密封(みっぷう)された食品(しょくひん)などで問題(もんだい)になることがある、重篤(じゅうとく)な症状(しょうじょう)を起(お)こす細菌(さいきん)は何(なん)ですか。",
+options:["A. ボツリヌス菌(きん)","B. サルモネラ属菌(ぞくきん)","C. 腸管出血性大腸菌(ちょうかんしゅっけつせいだいちょうきん)"],
+correct:0
+},
+{
+question:"一般的(いっぱんてき)な食中毒菌(しょくちゅうどくきん)を加熱殺菌(かねつさっきん)する基本条件(きほんじょうけん)としてよく使われるものはどれですか。",
+options:["A. 60℃で10秒間(びょうかん)","B. 75℃で1分間(いっぷんかん)以上(いじょう)","C. 100℃で5分間(ごふんかん)"],
+correct:1
+},
+{
+question:"カキなどの二枚貝(にまいがい)に関連(かんれん)することがあるウイルスは何(なん)ですか。",
+options:["A. セレウス菌(きん)","B. ノロウイルス","C. アニサキス"],
+correct:1
+},
+{
+question:"ノロウイルス対策(たいさく)として加熱(かねつ)するときの目安(めやす)はどれですか。",
+options:["A. 75℃で1分間(いっぷんかん)","B. 85～90℃で90秒間(びょうかん)以上(いじょう)","C. 60℃で20分間(ぷんかん)"],
+correct:1
+},
+{
+question:"ノロウイルスについて正(ただ)しい説明(せつめい)はどれですか。",
+options:["A. アルコール消毒(しょうどく)だけでは十分(じゅうぶん)でないことがある","B. 食品(しょくひん)の中でどんどん増(ふ)える","C. 75℃で1分間(いっぷんかん)加熱(かねつ)すれば必(かなら)ず安全(あんぜん)"],
+correct:0
+},
+{
+question:"ノロウイルス予防(よぼう)の4原則(げんそく)に含(ふく)まれないものはどれですか。",
+options:["A. 持ち込まない(もちこまない)","B. 増やさない(ふやさない)","C. 拡げない(ひろげない)"],
+correct:1
+},
+{
+question:"サバ、イワシ、サケ、イカなどに寄生(きせい)することがあり、腹痛(ふくつう)の原因(げんいん)になる寄生虫(きせいちゅう)は何(なん)ですか。",
+options:["A. ソラニン","B. ヒスタミン","C. アニサキス"],
+correct:2
+},
+{
+question:"アニサキス対策(たいさく)の冷凍(れいとう)条件(じょうけん)として知られるものはどれですか。",
+options:["A. 0℃で1時間(じかん)","B. 4℃で1週間(しゅうかん)","C. −20℃で24時間(じかん)以上(いじょう)"],
+correct:2
+},
+{
+question:"じゃがいもの芽(め)や緑色(みどりいろ)の部分(ぶぶん)に含(ふく)まれる有害物質(ゆうがいぶっしつ)は何(なん)ですか。",
+options:["A. ヒスタミン","B. ソラニン","C. アレルゲン"],
+correct:1
+},
+{
+question:"保存状態(ほぞんじょうたい)の悪(わる)いマグロやサバなどで増(ふ)えることがある物質(ぶっしつ)は何(なん)ですか。",
+options:["A. ヒスタミン","B. ソラニン","C. 芽胞(がほう)"],
+correct:0
+},
+{
+question:"食品(しょくひん)のアレルギー表示(ひょうじ)について、正(ただ)しい対応(たいおう)はどれですか。",
+options:["A. アレルギー物質(ぶっしつ)を確認(かくにん)し、決(き)められた表示(ひょうじ)を行(おこな)う","B. 表示(ひょうじ)しなくてもよい","C. 原材料(げんざいりょう)を確認(かくにん)する必要(ひつよう)はない"],
+correct:0
+},
+{
+question:"アレルギー物質(ぶっしつ)を含(ふく)む原材料(げんざいりょう)を扱(あつか)った器具(きぐ)について正(ただ)しいものはどれですか。",
+options:["A. そのまま次(つぎ)の原材料(げんざいりょう)に使(つか)う","B. 適切(てきせつ)に洗浄(せんじょう)し、交差接触(こうさせっしょく)を防(ふせ)ぐ","C. 布(ぬの)で拭(ふ)くだけでよい"],
+correct:1
+},
+{
+question:"5S活動(かつどう)で、使(つか)わないものを取(と)り除(のぞ)くことを何(なん)と言(い)いますか。",
+options:["A. 整理(せいり)","B. 整頓(せいとん)","C. 清掃(せいそう)"],
+correct:0
+},
+{
+question:"5S活動(かつどう)で、必要(ひつよう)なものを使(つか)いやすい場所(ばしょ)に置(お)くことを何(なん)と言(い)ますか。",
+options:["A. 清掃(せいそう)","B. 整頓(せいとん)","C. 清潔(せいけつ)"],
+correct:1
+},
+{
+question:"殺菌(さっきん)が終(お)わった食品(しょくひん)を扱(あつか)う区域(くいき)として適切(てきせつ)なものはどれですか。",
+options:["A. 汚染作業区域(おせんさぎょうくいき)","B. 準清潔作業区域(じゅんせいけつさぎょうくいき)","C. 清潔作業区域(せいけつさぎょうくいき)"],
+correct:2
+},
+{
+question:"作業服(さぎょうふく)の着用方法(ちゃくようほうほう)として間違(まちが)っているものはどれですか。",
+options:["A. マスクから鼻(はな)が出(で)ないようにする","B. 帽子(ぼうし)から髪(かみ)の毛(け)が出(で)ないようにする","C. 暑(あつ)いときは袖(そで)をまくって作業(さぎょう)する"],
+correct:2
+},
+{
+question:"細菌(さいきん)が増(ふ)えるために必要(ひつよう)な3つの要素(ようそ)は何(なん)ですか。",
+options:["A. 温度(おんど)、水分(すいぶん)、栄養(えいよう)","B. 塩分(えんぶん)、糖分(とうぶん)、油分(ゆぶん)","C. 空気(くうき)、日光(にっこう)、土(つち)"],
+correct:0
+},
+{
+question:"手洗(てあら)いで大切(たいせつ)なことはどれですか。",
+options:["A. 水(みず)だけで一瞬(いっしゅん)洗(あら)う","B. 石(せっ)けんを使(つか)い、手(て)のすみずみまで丁寧(ていねい)に洗(あら)う","C. 作業服(さぎょうふく)で手(て)を拭(ふ)く"],
+correct:1
+},
+{
+question:"手(て)を洗(あら)った後(あと)、アルコール消毒(しょうどく)の前(まえ)に行(おこな)うことはどれですか。",
+options:["A. 濡(ぬ)れたままにする","B. 清潔(せいけつ)なペーパータオルなどで手(て)を乾(かわ)かす","C. 作業服(さぎょうふく)で手(て)を拭(ふ)く"],
+correct:1
+}
 ];
 
-const quizBox = document.getElementById("quiz-box");
+/* ===================================
+   MEMUAT DAN MENYIMPAN PROGRES
+=================================== */
 
-/* =========================
-   LOCALSTORAGE
-========================= */
-
-// Memuat jawaban dan nomor soal yang tersimpan
 function loadProgress() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
@@ -618,27 +462,20 @@ function loadProgress() {
       Array.isArray(saved.answers) &&
       saved.answers.length === quizData.length
     ) {
-      const restoredAnswers = saved.answers.map((answer, index) => {
-        if (
+      return {
+        current:
+          Number.isInteger(saved.current) &&
+          saved.current >= 0 &&
+          saved.current < quizData.length
+            ? saved.current : 0,
+
+        answers: saved.answers.map((answer, i) =>
           Number.isInteger(answer) &&
           answer >= 0 &&
-          answer < quizData[index].options.length
-        ) {
-          return answer;
-        }
-        return null;
-      });
+          answer < quizData[i].options.length
+            ? answer : null
+        ),
 
-      const restoredIndex =
-        Number.isInteger(saved.current) &&
-        saved.current >= 0 &&
-        saved.current < quizData.length
-          ? saved.current
-          : 0;
-
-      return {
-        current: restoredIndex,
-        answers: restoredAnswers,
         completed: saved.completed === true
       };
     }
@@ -653,7 +490,12 @@ function loadProgress() {
   };
 }
 
-// Menyimpan semua progres kuis
+const restored = loadProgress();
+
+let currentQuestionIndex = restored.current;
+let selectedAnswers = restored.answers;
+let quizCompleted = restored.completed;
+
 function saveProgress() {
   try {
     localStorage.setItem(
@@ -669,91 +511,45 @@ function saveProgress() {
   }
 }
 
-const savedProgress = loadProgress();
+const quizBox = document.getElementById("quiz-box");
 
-let currentQuestionIndex = savedProgress.current;
-let selectedAnswers = savedProgress.answers;
-let quizCompleted = savedProgress.completed;
-
-/* =========================
-   FUNGSI BANTUAN
-========================= */
-
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, ch => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  }[ch]));
-}
-
-function mediaHTML(image, audio, imageClass) {
-  let html = "";
-
-  if (image) {
-    html += `<img class="${imageClass}" src="${escapeHTML(image)}" alt="Media soal" loading="lazy">`;
-  }
-
-  if (audio) {
-    html += `<audio controls preload="none" src="${escapeHTML(audio)}">Browser Anda tidak mendukung audio.</audio>`;
-  }
-
-  return html;
-}
-
-/* =========================
-   MENAMPILKAN SOAL
-========================= */
+/* ===================================
+   TAMPILAN SOAL
+=================================== */
 
 function loadQuiz() {
-  if (!quizData.length) {
-    quizBox.innerHTML = "<h2>Tidak ada soal</h2>";
-    return;
-  }
-
-  // Simpan posisi dan jawaban setiap kali soal ditampilkan
   saveProgress();
 
   const q = quizData[currentQuestionIndex];
-  const last = currentQuestionIndex === quizData.length - 1;
   const progress = ((currentQuestionIndex + 1) / quizData.length) * 100;
-  const answeredCount = selectedAnswers.filter(a => a !== null).length;
+  const answered = selectedAnswers.filter(a => a !== null).length;
+  const isLast = currentQuestionIndex === quizData.length - 1;
 
   quizBox.innerHTML = `
-    <h2>Latihan Food Safety &amp; Sanitasi</h2>
+    <h1>Latihan Food Safety &amp; Sanitasi</h1>
 
     <div class="progress-bar">
       Soal ${currentQuestionIndex + 1} / ${quizData.length}
-      &nbsp; | &nbsp;
-      Terjawab ${answeredCount}
+      &nbsp; | &nbsp; Terjawab ${answered}
     </div>
 
-    <div class="progress-track"
-         role="progressbar"
-         aria-valuemin="0"
-         aria-valuemax="100"
-         aria-valuenow="${Math.round(progress)}">
+    <div class="progress-track">
       <div class="progress-fill" style="width:${progress}%"></div>
     </div>
 
     <div class="question">
-      ${currentQuestionIndex + 1}. ${escapeHTML(q.question)}
+      ${currentQuestionIndex + 1}. ${q.question}
     </div>
 
-    ${mediaHTML(q.qImage, q.qAudio, "q-image")}
-
     <ul class="options-list">
-      ${q.options.map((opt, i) => `
+      ${q.options.map((option, i) => `
         <li class="option-item">
           <button
             type="button"
             class="option-btn ${selectedAnswers[currentQuestionIndex] === i ? "selected" : ""}"
             data-option="${i}"
             aria-pressed="${selectedAnswers[currentQuestionIndex] === i}">
-            ${escapeHTML(opt.text)}
-            ${mediaHTML(opt.image, opt.audio, "opt-image")}
+            ${option}
           </button>
         </li>
       `).join("")}
@@ -762,17 +558,17 @@ function loadQuiz() {
     <div class="navigation">
       <button
         type="button"
-        class="action-btn btn-next"
         id="prev-btn"
+        class="action-btn btn-next"
         ${currentQuestionIndex === 0 ? "disabled style='visibility:hidden'" : ""}>
         Kembali
       </button>
 
       <button
         type="button"
-        class="action-btn ${last ? "btn-submit" : "btn-next"}"
-        id="next-btn">
-        ${last ? "Selesai & Lihat Hasil" : "Selanjutnya"}
+        id="next-btn"
+        class="action-btn ${isLast ? "btn-submit" : "btn-next"}">
+        ${isLast ? "Selesai & Lihat Hasil" : "Selanjutnya"}
       </button>
     </div>
 
@@ -781,9 +577,9 @@ function loadQuiz() {
     </p>
   `;
 
-  quizBox.querySelectorAll("[data-option]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      selectOption(Number(btn.dataset.option));
+  quizBox.querySelectorAll("[data-option]").forEach(button => {
+    button.addEventListener("click", () => {
+      selectOption(Number(button.dataset.option));
     });
   });
 
@@ -794,9 +590,9 @@ function loadQuiz() {
     .addEventListener("click", nextQuestion);
 }
 
-/* =========================
+/* ===================================
    MEMILIH JAWABAN
-========================= */
+=================================== */
 
 function selectOption(index) {
   if (
@@ -809,16 +605,14 @@ function selectOption(index) {
 
   selectedAnswers[currentQuestionIndex] = index;
 
-  // Langsung simpan begitu jawaban dipilih
+  // Simpan langsung ketika pilihan diklik.
   saveProgress();
-
-  // Perbarui tampilan pilihan jawaban
   loadQuiz();
 }
 
-/* =========================
+/* ===================================
    NAVIGASI SOAL
-========================= */
+=================================== */
 
 function prevQuestion() {
   if (currentQuestionIndex > 0) {
@@ -826,16 +620,23 @@ function prevQuestion() {
     saveProgress();
     loadQuiz();
 
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 }
 
 function nextQuestion() {
   if (selectedAnswers[currentQuestionIndex] === null) {
-    alert("Silakan pilih salah satu jawaban terlebih dahulu!");
+    Swal.fire({
+      icon: "warning",
+      title: "Jawaban belum dipilih",
+      text: "Silakan pilih salah satu jawaban terlebih dahulu!",
+      confirmButtonText: "Oke",
+      confirmButtonColor: "#0d6efd",
+      customClass: {
+        popup: "swal-mobile-popup"
+      }
+    });
+
     return;
   }
 
@@ -844,25 +645,22 @@ function nextQuestion() {
     saveProgress();
     loadQuiz();
 
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   } else {
     calculateScore();
   }
 }
 
-/* =========================
-   HASIL DAN REVIEW
-========================= */
+/* ===================================
+   HASIL DAN REVIEW JAWABAN
+=================================== */
 
 function calculateScore() {
   quizCompleted = true;
   saveProgress();
 
-  const score = quizData.reduce((sum, q, i) => {
-    return sum + (selectedAnswers[i] === q.correct ? 1 : 0);
+  const score = quizData.reduce((total, q, i) => {
+    return total + (selectedAnswers[i] === q.correct ? 1 : 0);
   }, 0);
 
   const finalScore = Math.round(score / quizData.length * 100);
@@ -872,30 +670,28 @@ function calculateScore() {
 
     const chosen = selectedAnswers[i] === null
       ? "Tidak dijawab"
-      : q.options[selectedAnswers[i]].text;
+      : q.options[selectedAnswers[i]];
 
-    const right = q.options[q.correct].text;
+    const answerKey = q.options[q.correct];
 
     return `
       <div class="review-item ${correct ? "correct" : "wrong"}">
         <div class="review-q">
-          ${i + 1}. ${escapeHTML(q.question)}
+          ${i + 1}. ${q.question}
           <span class="${correct ? "text-success" : "text-danger"}">
             ${correct ? "✓ Benar" : "✗ Salah"}
           </span>
         </div>
 
-        ${mediaHTML(q.qImage, q.qAudio, "review-media")}
-
-        <div class="review-ans">
+        <div>
           Jawaban Anda:
-          <strong>${escapeHTML(chosen)}</strong>
+          <strong>${chosen}</strong>
         </div>
 
         ${!correct ? `
-          <div class="review-ans">
+          <div>
             Kunci jawaban:
-            <strong class="text-success">${escapeHTML(right)}</strong>
+            <strong class="text-success">${answerKey}</strong>
           </div>
         ` : ""}
       </div>
@@ -904,8 +700,7 @@ function calculateScore() {
 
   quizBox.innerHTML = `
     <div class="result-screen">
-      <h2>Kuis Selesai!</h2>
-
+      <h1>Kuis Selesai!</h1>
       <p>Nilai Anda:</p>
 
       <div class="score-box">${finalScore}</div>
@@ -917,15 +712,12 @@ function calculateScore() {
 
       <br>
 
-      <button type="button"
-              class="action-btn btn-next"
-              id="reset-btn">
-        🔄 Ulangi Latihan
+      <button type="button" class="action-btn btn-next" id="reset-btn">
+         Ulangi Latihan
       </button>
 
       <section class="review-section">
-        <h3>📋 Review Jawaban</h3>
-        <br>
+        <h2>Review Jawaban</h2>
         ${reviewHTML}
       </section>
     </div>
@@ -934,59 +726,67 @@ function calculateScore() {
   document.getElementById("reset-btn")
     .addEventListener("click", resetQuiz);
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-/* =========================
+/* ===================================
    MENGULANG KUIS
-========================= */
+=================================== */
 
 function resetQuiz() {
-  const confirmed = confirm(
-    "Ulangi latihan dari awal? Semua jawaban sebelumnya akan dihapus."
-  );
+  Swal.fire({
+    icon: "question",
+    title: "Ulangi latihan?",
+    text: "Semua jawaban sebelumnya akan dihapus dan kuis dimulai dari awal.",
+    showCancelButton: true,
+    confirmButtonText: "Ya, ulangi",
+    cancelButtonText: "Batal",
+    confirmButtonColor: "#198754",
+    cancelButtonColor: "#6c757d",
+    reverseButtons: true,
+    customClass: {
+      popup: "swal-mobile-popup"
+    }
+  }).then(result => {
+    if (!result.isConfirmed) return;
 
-  if (!confirmed) {
-    return;
-  }
+    currentQuestionIndex = 0;
+    selectedAnswers = Array(quizData.length).fill(null);
+    quizCompleted = false;
 
-  currentQuestionIndex = 0;
-  selectedAnswers = Array(quizData.length).fill(null);
-  quizCompleted = false;
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (error) {
+      console.warn("Gagal menghapus progres:", error);
+    }
 
-  // Hapus progres lama dari localStorage
-  try {
-    localStorage.removeItem(STORAGE_KEY);
-  } catch (error) {
-    console.warn("Gagal menghapus progres:", error);
-  }
+    saveProgress();
+    loadQuiz();
 
-  // Simpan kondisi kuis yang baru dan kosong
-  saveProgress();
-  loadQuiz();
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
+    Swal.fire({
+      icon: "success",
+      title: "Kuis diulang",
+      text: "Silakan mulai menjawab dari soal pertama.",
+      confirmButtonText: "Mulai",
+      confirmButtonColor: "#0d6efd",
+      customClass: {
+        popup: "swal-mobile-popup"
+      }
+    });
   });
 }
 
-/* =========================
-   MULAI / PULIHKAN KUIS
-========================= */
+/* Simpan progres saat halaman akan ditinggalkan. */
+window.addEventListener("pagehide", saveProgress);
 
-// Jika sebelumnya sudah selesai, langsung tampilkan hasil lagi
+/* Pulihkan progres ketika halaman dibuka kembali. */
 if (quizCompleted) {
   calculateScore();
 } else {
   loadQuiz();
 }
-
-// Simpan progres saat halaman akan ditinggalkan
-window.addEventListener("pagehide", saveProgress);
 </script>
 </body>
 </html>
