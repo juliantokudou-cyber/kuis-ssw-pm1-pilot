@@ -128,9 +128,9 @@ h1 {
 }
 
 .option-btn.selected {
-  background: #e7f1ff;
-  border-color: #0d6efd;
-  color: #0d6efd;
+  background-color: #e8f5e9; /* Latar belakang hijau muda */
+  border-color: #2e7d32;     /* Garis tepi hijau tua */
+  color: #2e7d32;
   font-weight: bold;
 }
 
@@ -142,12 +142,18 @@ h1 {
 }
 
 .action-btn {
-  padding: 12px 18px;
-  font-size: 1rem;
-  border: 0;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
+  padding: 12px 25px !important;
+    font-size: 1rem !important;
+    border: none !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    font-weight: bold !important;
+    transition: background 0.2s !important;
+    
+    /* Memaksa warna latar menjadi KUNING dan teks HITAM/ABU TUA */
+    background-color: #ffca28 !important; 
+    color: #333333 !important;                /* Warna teks abu-abu tua agar kontras dan mudah dibaca */
+
 }
 
 .action-btn:disabled {
@@ -161,8 +167,8 @@ h1 {
 }
 
 .btn-submit {
-  background: #198754;
-  color: white;
+  background: #198754 !important;
+  color: white !important;
 }
 
 .save-status {
@@ -807,11 +813,12 @@ function showTimeExpired() {
   });
 }
 
+
 /* =========================================
-   HITUNG NILAI DAN REVIEW
-   Jawaban benar = 10 poin
-   Jawaban salah/kosong = 0 poin
-   Skor maksimal = 350 poin untuk 35 soal
+   HITUNG NILAI, KELULUSAN, WAKTU, DAN REVIEW
+   Benar = 10 poin
+   Salah/kosong = 0 poin
+   Lulus = minimal 26 jawaban benar
 ========================================= */
 
 function calculateScore() {
@@ -830,12 +837,43 @@ function calculateScore() {
     );
   }, 0);
 
-  // Setiap jawaban benar bernilai 10 poin.
+  // Hitung skor.
   const finalScore = correctCount * 10;
-
-  // Skor maksimal berdasarkan jumlah soal.
   const maxScore = quizData.length * 10;
 
+  // Batas kelulusan: minimal 26 jawaban benar.
+  const passingScore = 26;
+  const isPassed = correctCount >= passingScore;
+
+  // Hitung waktu yang telah digunakan.
+  // Tetap akurat jika kuis dilanjutkan setelah halaman ditutup.
+  const durationSeconds = Math.floor(TIMER_DURATION / 1000);
+  const remainingSeconds = Math.max(
+    0,
+    Math.ceil((timerEndTime - Date.now()) / 1000)
+  );
+
+  const elapsedSeconds = Math.min(
+    durationSeconds,
+    Math.max(0, durationSeconds - remainingSeconds)
+  );
+
+  const elapsedMinutes = Math.floor(elapsedSeconds / 60);
+  const elapsedRemainderSeconds = elapsedSeconds % 60;
+
+  const elapsedText =
+    `${elapsedMinutes} menit ${elapsedRemainderSeconds} detik`;
+
+  // Hitung jawaban yang belum dijawab.
+  const unansweredCount = selectedAnswers.filter(
+    answer => answer === null
+  ).length;
+
+  const wrongCount = quizData.length
+    - correctCount
+    - unansweredCount;
+
+  // Buat review seluruh soal.
   const reviewHTML = quizData.map((q, i) => {
     const correct = selectedAnswers[i] === q.correct;
 
@@ -858,7 +896,7 @@ function calculateScore() {
             ${
               correct
                 ? "✓ Benar (+10 poin)"
-                : "✗ Salah / Tidak dijawab (+0 poin)"
+                : "✗ Salah (+0 poin)"
             }
           </span>
         </div>
@@ -878,6 +916,7 @@ function calculateScore() {
     `;
   }).join("");
 
+  // Tampilkan hasil akhir.
   quizBox.innerHTML = `
     <div class="result-screen">
 
@@ -885,29 +924,47 @@ function calculateScore() {
         ${timeExpired ? "Waktu Habis!" : "Kuis Selesai!"}
       </h1>
 
-      <p>Skor Anda:</p>
-
-      <div class="score-box">
-        ${finalScore}
+      <div class="${isPassed ? "pass-status" : "fail-status"}">
+        ${isPassed ? "🎉 LULUS" : "TIDAK LULUS"}
       </div>
 
       <p>
-        dari maksimal
-        <strong>${maxScore}</strong> poin.
+        ${
+          isPassed
+            ? "Selamat! Anda memenuhi batas kelulusan."
+            : "Belum lulus. Tetap semangat dan coba berlatih kembali."
+        }
       </p>
 
-      <p>
-        Jawaban benar:
-        <strong>${correctCount}</strong>
-        dari
-        <strong>${quizData.length}</strong> soal.
-      </p>
+      <p>Skor Anda:</p>
+
+      <div class="score-box">${finalScore}</div>
 
       <p>
-        Jawaban salah:
-        <strong>${quizData.length - correctCount}</strong>
-        soal.
+        dari maksimal <strong>${maxScore}</strong> poin.
       </p>
+
+      <div class="completion-info">
+        <div>
+          <strong>Jawaban benar:</strong>
+          ${correctCount} dari ${quizData.length} soal
+        </div>
+
+        <div>
+          <strong>Jawaban salah:</strong>
+          ${wrongCount} soal
+        </div>
+
+        <div>
+          <strong>Batas lulus:</strong>
+          minimal ${passingScore} jawaban benar
+        </div>
+
+        <div>
+          <strong>Waktu penyelesaian:</strong>
+          ${elapsedText}
+        </div>
+      </div>
 
       <button
         type="button"
