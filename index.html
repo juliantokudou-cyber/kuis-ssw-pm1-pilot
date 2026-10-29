@@ -1,12 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Latihan Soal SSW PM 1</title>
+<title>Latihan Food Safety & Sanitasi</title>
 
-<!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
@@ -17,36 +15,35 @@
 body {
   margin: 0;
   padding: 16px;
+  min-height: 100vh;
   background: #f4f7f6;
   color: #333;
   font-family: Arial, Helvetica, sans-serif;
   display: flex;
   justify-content: center;
-  min-height: 100vh;
 }
 
 .quiz-container {
   width: 100%;
   max-width: 720px;
+  padding: 24px;
+  margin: 12px 0;
   background: white;
   border-radius: 16px;
   box-shadow: 0 4px 16px #00000012;
-  padding: 24px;
-  margin: 12px 0;
 }
 
 h1 {
   font-size: 1.6rem;
   text-align: center;
   color: #2c3e50;
-  margin: 8px 0 24px;
+  margin: 8px 0 20px;
 }
 
 .progress-bar {
-  font-size: .92rem;
-  color: #666;
   text-align: right;
   font-weight: bold;
+  color: #666;
   margin-bottom: 10px;
 }
 
@@ -64,8 +61,39 @@ h1 {
   transition: width .2s;
 }
 
+/* TIMER */
+.timer {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background: #eaf2ff;
+  color: #0d6efd;
+  padding: 14px 8px;
+  border-radius: 10px;
+  margin: 16px 0 22px;
+  border: 2px solid #cfe2ff;
+}
+
+.timer.warning {
+  background: #dc3545;
+  color: white;
+  border-color: #b02a37;
+  animation: timerBlink .8s infinite;
+}
+
+@keyframes timerBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .35; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timer.warning {
+    animation: none;
+  }
+}
+
 .question {
-  font-size: 1.12rem;
+  font-size: 1.1rem;
   font-weight: 600;
   line-height: 1.8;
   margin-bottom: 18px;
@@ -122,6 +150,11 @@ h1 {
   font-weight: bold;
 }
 
+.action-btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
 .btn-next {
   background: #0d6efd;
   color: white;
@@ -130,6 +163,13 @@ h1 {
 .btn-submit {
   background: #198754;
   color: white;
+}
+
+.save-status {
+  text-align: center;
+  color: #198754;
+  font-size: .9rem;
+  margin-top: 20px;
 }
 
 .result-screen {
@@ -185,7 +225,6 @@ h1 {
   font-weight: bold;
 }
 
-/* SweetAlert2 responsif untuk HP */
 .swal-mobile-popup {
   width: min(90%, 420px) !important;
   border-radius: 20px !important;
@@ -204,11 +243,6 @@ h1 {
 .swal2-styled {
   border-radius: 8px !important;
   padding: 10px 24px !important;
-}
-
-button:focus-visible {
-  outline: 3px solid #ffc107;
-  outline-offset: 2px;
 }
 
 @media (max-width: 480px) {
@@ -238,6 +272,10 @@ button:focus-visible {
     padding: 11px 14px;
     font-size: .9rem;
   }
+
+  .timer {
+    font-size: 1rem;
+  }
 }
 </style>
 </head>
@@ -248,14 +286,17 @@ button:focus-visible {
 <script>
 "use strict";
 
-/* ===================================
-   PENGATURAN PENYIMPANAN
-=================================== */
+/* =========================================
+   PENGATURAN KUIS DAN TIMER
+========================================= */
 
-const STORAGE_KEY = "ssw_food_safety_quiz_v1";
+const STORAGE_KEY = "ssw_food_safety_quiz_v2";
 
+// Durasi 70 menit.
+const TIMER_DURATION = 70 * 60 * 1000;
+  
 /*
-  correct:
+  Nomor jawaban:
   0 = pilihan A
   1 = pilihan B
   2 = pilihan C
@@ -263,7 +304,7 @@ const STORAGE_KEY = "ssw_food_safety_quiz_v1";
   Periksa kembali kunci jawaban dengan
   buku resmi OTAFF yang Anda gunakan.
 */
-
+  
 const quizData = [
 {
 question:"料理(りょうり)の中(なか)に卵(たまご)の殻(から)や金属片(きんぞくへん)が入(はい)ってしまったものを、まとめて何(なん)と言(い)いますか。",
@@ -441,10 +482,10 @@ options:["A. 濡(ぬ)れたままにする","B. 清潔(せいけつ)なペーパ
 correct:1
 }
 ];
-
-/* ===================================
-   MEMUAT DAN MENYIMPAN PROGRES
-=================================== */
+  
+/* =========================================
+   MEMUAT PROGRES DARI LOCALSTORAGE
+========================================= */
 
 function loadProgress() {
   try {
@@ -469,7 +510,12 @@ function loadProgress() {
             ? answer : null
         ),
 
-        completed: saved.completed === true
+        completed: saved.completed === true,
+
+        timerEndTime:
+          Number.isFinite(saved.timerEndTime) &&
+          saved.timerEndTime > 0
+            ? saved.timerEndTime : null
       };
     }
   } catch (error) {
@@ -479,7 +525,8 @@ function loadProgress() {
   return {
     current: 0,
     answers: Array(quizData.length).fill(null),
-    completed: false
+    completed: false,
+    timerEndTime: null
   };
 }
 
@@ -489,6 +536,14 @@ let currentQuestionIndex = restored.current;
 let selectedAnswers = restored.answers;
 let quizCompleted = restored.completed;
 
+// Jika timer pernah dibuat, gunakan batas waktu yang tersimpan.
+let timerEndTime =
+  restored.timerEndTime ?? (Date.now() + TIMER_DURATION);
+
+let timerInterval = null;
+let resultShown = false;
+let timeExpired = false;
+
 function saveProgress() {
   try {
     localStorage.setItem(
@@ -496,7 +551,8 @@ function saveProgress() {
       JSON.stringify({
         current: currentQuestionIndex,
         answers: selectedAnswers,
-        completed: quizCompleted
+        completed: quizCompleted,
+        timerEndTime: timerEndTime
       })
     );
   } catch (error) {
@@ -506,20 +562,29 @@ function saveProgress() {
 
 const quizBox = document.getElementById("quiz-box");
 
-/* ===================================
-   TAMPILAN SOAL
-=================================== */
+/* =========================================
+   TAMPILKAN SOAL
+========================================= */
 
 function loadQuiz() {
   saveProgress();
 
   const q = quizData[currentQuestionIndex];
-  const progress = ((currentQuestionIndex + 1) / quizData.length) * 100;
-  const answered = selectedAnswers.filter(a => a !== null).length;
-  const isLast = currentQuestionIndex === quizData.length - 1;
+  const progress =
+    ((currentQuestionIndex + 1) / quizData.length) * 100;
+
+  const answered =
+    selectedAnswers.filter(a => a !== null).length;
+
+  const isLast =
+    currentQuestionIndex === quizData.length - 1;
 
   quizBox.innerHTML = `
-    <h1>Latihan Soal SSW PM 1</h1>
+    <h1>Latihan Food Safety &amp; Sanitasi</h1>
+
+    <div id="timer" class="timer">
+      Memuat waktu...
+    </div>
 
     <div class="progress-bar">
       Soal ${currentQuestionIndex + 1} / ${quizData.length}
@@ -539,9 +604,14 @@ function loadQuiz() {
         <li class="option-item">
           <button
             type="button"
-            class="option-btn ${selectedAnswers[currentQuestionIndex] === i ? "selected" : ""}"
+            class="option-btn ${
+              selectedAnswers[currentQuestionIndex] === i
+                ? "selected" : ""
+            }"
             data-option="${i}"
-            aria-pressed="${selectedAnswers[currentQuestionIndex] === i}">
+            aria-pressed="${
+              selectedAnswers[currentQuestionIndex] === i
+            }">
             ${option}
           </button>
         </li>
@@ -553,19 +623,20 @@ function loadQuiz() {
         type="button"
         id="prev-btn"
         class="action-btn btn-next"
-        ${currentQuestionIndex === 0 ? "disabled style='visibility:hidden'" : ""}>
+        ${currentQuestionIndex === 0
+          ? "disabled style='visibility:hidden'" : ""}>
         Kembali
       </button>
 
       <button
         type="button"
         id="next-btn"
-        class="action-btn ${isLast ? "btn-submit" : "btn-next"}">
+        class="action-btn ${
+          isLast ? "btn-submit" : "btn-next"
+        }">
         ${isLast ? "Selesai & Lihat Hasil" : "Selanjutnya"}
       </button>
     </div>
-
-    
   `;
 
   quizBox.querySelectorAll("[data-option]").forEach(button => {
@@ -579,13 +650,20 @@ function loadQuiz() {
 
   document.getElementById("next-btn")
     .addEventListener("click", nextQuestion);
+
+  updateTimer();
 }
 
-/* ===================================
-   MEMILIH JAWABAN
-=================================== */
+/* =========================================
+   PILIH JAWABAN DAN SIMPAN OTOMATIS
+========================================= */
 
 function selectOption(index) {
+  if (quizCompleted || Date.now() >= timerEndTime) {
+    updateTimer();
+    return;
+  }
+
   if (
     !Number.isInteger(index) ||
     index < 0 ||
@@ -596,16 +674,20 @@ function selectOption(index) {
 
   selectedAnswers[currentQuestionIndex] = index;
 
-  // Simpan langsung ketika pilihan diklik.
   saveProgress();
   loadQuiz();
 }
 
-/* ===================================
-   NAVIGASI SOAL
-=================================== */
+/* =========================================
+   NAVIGASI
+========================================= */
 
 function prevQuestion() {
+  if (quizCompleted || Date.now() >= timerEndTime) {
+    updateTimer();
+    return;
+  }
+
   if (currentQuestionIndex > 0) {
     currentQuestionIndex--;
     saveProgress();
@@ -616,6 +698,11 @@ function prevQuestion() {
 }
 
 function nextQuestion() {
+  if (quizCompleted || Date.now() >= timerEndTime) {
+    updateTimer();
+    return;
+  }
+
   if (selectedAnswers[currentQuestionIndex] === null) {
     Swal.fire({
       icon: "warning",
@@ -642,19 +729,112 @@ function nextQuestion() {
   }
 }
 
-/* ===================================
-   HASIL DAN REVIEW JAWABAN
-=================================== */
+/* =========================================
+   TIMER HITUNG MUNDUR
+========================================= */
+
+function updateTimer() {
+  const timerElement = document.getElementById("timer");
+
+  const remaining = Math.max(
+    0,
+    timerEndTime - Date.now()
+  );
+
+  const totalSeconds = Math.ceil(remaining / 1000);
+
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  if (timerElement) {
+    timerElement.textContent =
+      `${hours} jam ${minutes} menit ${seconds} detik`;
+
+    timerElement.classList.toggle(
+      "warning",
+      remaining > 0 &&
+      remaining <= 10 * 60 * 1000
+    );
+  }
+
+  // Waktu habis: akhiri kuis dan tampilkan hasil.
+  if (remaining <= 0 && !quizCompleted) {
+    timeExpired = true;
+    quizCompleted = true;
+    saveProgress();
+
+    if (timerInterval !== null) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+
+    showTimeExpired();
+  }
+}
+
+function startTimer() {
+  updateTimer();
+
+  if (timerInterval !== null) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+
+  if (!quizCompleted) {
+    timerInterval = setInterval(updateTimer, 250);
+  }
+}
+
+function showTimeExpired() {
+  if (resultShown) return;
+
+  resultShown = true;
+
+  Swal.fire({
+    icon: "info",
+    title: "Waktu Habis!",
+    text: "Waktu latihan telah berakhir. Hasil jawaban Anda akan ditampilkan.",
+    confirmButtonText: "Lihat Hasil",
+    confirmButtonColor: "#0d6efd",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    customClass: {
+      popup: "swal-mobile-popup"
+    }
+  }).then(() => {
+    calculateScore();
+  });
+}
+
+/* =========================================
+   HITUNG NILAI DAN REVIEW
+   Jawaban benar = 10 poin
+   Jawaban salah/kosong = 0 poin
+   Skor maksimal = 350 poin untuk 35 soal
+========================================= */
 
 function calculateScore() {
+  if (timerInterval !== null) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+
   quizCompleted = true;
   saveProgress();
 
-  const score = quizData.reduce((total, q, i) => {
-    return total + (selectedAnswers[i] === q.correct ? 1 : 0);
+  // Hitung jumlah jawaban benar.
+  const correctCount = quizData.reduce((total, q, i) => {
+    return total + (
+      selectedAnswers[i] === q.correct ? 1 : 0
+    );
   }, 0);
 
-  const finalScore = Math.round(score / quizData.length * 100);
+  // Setiap jawaban benar bernilai 10 poin.
+  const finalScore = correctCount * 10;
+
+  // Skor maksimal berdasarkan jumlah soal.
+  const maxScore = quizData.length * 10;
 
   const reviewHTML = quizData.map((q, i) => {
     const correct = selectedAnswers[i] === q.correct;
@@ -666,11 +846,20 @@ function calculateScore() {
     const answerKey = q.options[q.correct];
 
     return `
-      <div class="review-item ${correct ? "correct" : "wrong"}">
+      <div class="review-item ${
+        correct ? "correct" : "wrong"
+      }">
         <div class="review-q">
           ${i + 1}. ${q.question}
-          <span class="${correct ? "text-success" : "text-danger"}">
-            ${correct ? "✓ Benar" : "✗ Salah"}
+
+          <span class="${
+            correct ? "text-success" : "text-danger"
+          }">
+            ${
+              correct
+                ? "✓ Benar (+10 poin)"
+                : "✗ Salah / Tidak dijawab (+0 poin)"
+            }
           </span>
         </div>
 
@@ -691,44 +880,68 @@ function calculateScore() {
 
   quizBox.innerHTML = `
     <div class="result-screen">
-      <h1>Kuis Selesai!</h1>
-      <p>Nilai Anda:</p>
 
-      <div class="score-box">${finalScore}</div>
+      <h1>
+        ${timeExpired ? "Waktu Habis!" : "Kuis Selesai!"}
+      </h1>
+
+      <p>Skor Anda:</p>
+
+      <div class="score-box">
+        ${finalScore}
+      </div>
 
       <p>
-        Benar <strong>${score}</strong>
-        dari <strong>${quizData.length}</strong> soal.
+        dari maksimal
+        <strong>${maxScore}</strong> poin.
       </p>
 
-      <br>
+      <p>
+        Jawaban benar:
+        <strong>${correctCount}</strong>
+        dari
+        <strong>${quizData.length}</strong> soal.
+      </p>
 
-      <button type="button" class="action-btn btn-next" id="reset-btn">
-         Ulangi Latihan
+      <p>
+        Jawaban salah atau kosong:
+        <strong>${quizData.length - correctCount}</strong>
+        soal.
+      </p>
+
+      <button
+        type="button"
+        class="action-btn btn-next"
+        id="reset-btn">
+        Ulangi Latihan
       </button>
 
       <section class="review-section">
         <h2>Review Jawaban</h2>
         ${reviewHTML}
       </section>
+
     </div>
   `;
 
   document.getElementById("reset-btn")
     .addEventListener("click", resetQuiz);
 
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
 }
 
-/* ===================================
-   MENGULANG KUIS
-=================================== */
+/* =========================================
+   ULANGI KUIS
+========================================= */
 
 function resetQuiz() {
   Swal.fire({
     icon: "question",
     title: "Ulangi latihan?",
-    text: "Semua jawaban sebelumnya akan dihapus dan kuis dimulai dari awal.",
+    text: "Jawaban dan waktu sebelumnya akan dihapus. Timer kembali ke 1 jam 30 menit.",
     showCancelButton: true,
     confirmButtonText: "Ya, ulangi",
     cancelButtonText: "Batal",
@@ -741,9 +954,18 @@ function resetQuiz() {
   }).then(result => {
     if (!result.isConfirmed) return;
 
+    if (timerInterval !== null) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+
     currentQuestionIndex = 0;
     selectedAnswers = Array(quizData.length).fill(null);
     quizCompleted = false;
+    resultShown = false;
+    timeExpired = false;
+
+    timerEndTime = Date.now() + TIMER_DURATION;
 
     try {
       localStorage.removeItem(STORAGE_KEY);
@@ -753,12 +975,13 @@ function resetQuiz() {
 
     saveProgress();
     loadQuiz();
+    startTimer();
 
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     Swal.fire({
       icon: "success",
-      title: "Kuis diulang",
+      title: "Kuis Diulang",
       text: "Silakan mulai menjawab dari soal pertama.",
       confirmButtonText: "Mulai",
       confirmButtonColor: "#0d6efd",
@@ -772,11 +995,15 @@ function resetQuiz() {
 /* Simpan progres saat halaman akan ditinggalkan. */
 window.addEventListener("pagehide", saveProgress);
 
-/* Pulihkan progres ketika halaman dibuka kembali. */
+/* =========================================
+   MULAI / PULIHKAN KUIS
+========================================= */
+
 if (quizCompleted) {
   calculateScore();
 } else {
   loadQuiz();
+  startTimer();
 }
 </script>
 </body>
